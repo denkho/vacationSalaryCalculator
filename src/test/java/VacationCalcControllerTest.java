@@ -12,15 +12,24 @@ import ru.denkho.vacationsalarycalc.calculator.VacationCalcController;
 public class VacationCalcControllerTest {
     @ParameterizedTest
         @CsvSource({
-                "50000, 14, 23890.784",
-                "0, 0, 0",
-                "50000, 0, 0",
-                "-50000, 14, 0"
+                "50000, 14, null, null, 23890.784",
+                "0, 0, null, null, 0",
+                "50000, 0, null, null, 0",
+                "-50000, 14, null, null, 0",
+                "50000, 14, 2024-09-01, 2024-09-14, 23890.784",
+                "0, 0, 2024-09-01, 2024-09-14, 0",
+                "50000, 0, 2024-09-01, 2024-09-14, 0",
+                "-50000, 14, 2024-09-01, 2024-09-14, 0",
         })
-    public void calculateVacationPayTest(double averageSalary, int vacationDays, double expectedVacationPay){
+    public void calculateVacationPayTest(double averageSalary,
+                                         int vacationDays,
+                                         String vacationStartDate,
+                                         String vacationEndDate,
+                                         double expectedVacationPay
+                                         ){
         VacationCalcController controller = new VacationCalcController();
 
-        double actualVacationPay = controller.calculateVacationPayment(averageSalary, vacationDays);
+        double actualVacationPay = controller.calculateVacationPayment(averageSalary, vacationDays, vacationStartDate, vacationEndDate);
 
         Assertions.assertEquals(expectedVacationPay, actualVacationPay, 0.001);
     }
