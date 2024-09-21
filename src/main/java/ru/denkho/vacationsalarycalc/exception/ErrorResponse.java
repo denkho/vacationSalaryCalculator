@@ -1,4 +1,4 @@
-package ru.denkho.vacationsalarycalc.calculator;
+package ru.denkho.vacationsalarycalc.exception;
 
 /**
  * Класс представления ошибки

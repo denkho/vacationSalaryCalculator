@@ -1,4 +1,4 @@
-package ru.denkho.vacationsalarycalc.calculator;
+package ru.denkho.vacationsalarycalc.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
