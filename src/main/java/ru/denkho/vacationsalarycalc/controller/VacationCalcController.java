@@ -3,20 +3,25 @@ package ru.denkho.vacationsalarycalc.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.denkho.vacationsalarycalc.service.VacationCalcService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 /**
- * Класс микросервиса для расчета отпускных
+ * Класс контроллера микросервиса для расчета отпускных
  * @author Denis Khokhlov
  * @version 1.0
  */
 
 @RestController
 public class VacationCalcController {
-    /** Поле - среднее количестве дней в месяце */
-    public static final double AVERAGE_DAYS_IN_MONTH = 29.3;
+
+    private final VacationCalcService vacationCalcService;
+
+    public VacationCalcController(VacationCalcService vacationCalcService) {
+        this.vacationCalcService = vacationCalcService;
+    }
 
     /** Метод для расчета отпускных
      * @param averageSalary - средняя зарплата за предыдущие 12 месяцев
@@ -41,10 +46,8 @@ public class VacationCalcController {
 
             try {
 
-                LocalDate date_start = LocalDate.parse(vacationStartDate);
-                LocalDate date_end = LocalDate.parse(vacationEndDate);
+                vacationDays = vacationCalcService.getNumberOfVacationDays(vacationStartDate, vacationEndDate);
 
-                vacationDays = (int) (date_end.toEpochDay() - date_start.toEpochDay()) + 1;
             } catch (DateTimeParseException e) {
                 throw new IllegalArgumentException("Неверный формат даты. Используйте формат ГГГГ-ММ-ДД.");
             }
@@ -55,9 +58,7 @@ public class VacationCalcController {
             throw new IllegalArgumentException("Значения зарплаты или дней отпуска не могут быть отрицательными.");
         }
 
-        // Подсчет отпускных
-        double vacationPayment = (averageSalary / AVERAGE_DAYS_IN_MONTH) * vacationDays;
+        return vacationCalcService.calculateVacationPayment(averageSalary, vacationDays);
 
-        return vacationPayment;
     }
 }
